@@ -1,0 +1,8 @@
+prefix=/home/titarta/Desktop/ROSassign2-g02/install
+
+Name: agitr
+Description: Description of agitr
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/titarta/Desktop/ROSassign2-g02/install/lib 
+Requires: 
