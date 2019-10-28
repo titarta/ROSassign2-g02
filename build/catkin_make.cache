@@ -1,2 +1,0 @@
-reactive_robot:stdr_simulator/stdr_gui:stdr_simulator/stdr_launchers:stdr_simulator/stdr_msgs:stdr_simulator/stdr_parser:stdr_simulator/stdr_resources:stdr_simulator/stdr_robot:stdr_simulator/stdr_samples:stdr_simulator/stdr_server:stdr_simulator/stdr_simulator
--DCATKIN_DEVEL_PREFIX=/home/titarta/Desktop/ROSassign2-g02/devel -DCMAKE_INSTALL_PREFIX=/home/titarta/Desktop/ROSassign2-g02/install -G Unix Makefiles
