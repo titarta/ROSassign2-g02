@@ -118,7 +118,7 @@ catkin_package()
 ## Your package locations should be listed before other locations
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(hello hello.cpp)
+add_executable(hello src/hello.cpp)
 target_link_libraries(hello ${catkin_LIBRARIES})
 
 
