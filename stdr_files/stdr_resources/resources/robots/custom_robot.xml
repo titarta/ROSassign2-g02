@@ -2,7 +2,7 @@
   <robot_specifications>
     <footprint>
 	  <footprint_specifications>
-	    <radius>0.3</radius>
+	    <radius>0.1</radius>
 	  </footprint_specifications>
     </footprint>
 	<initial_pose>
@@ -17,19 +17,8 @@
       </theta>
     </initial_pose>
     <laser>
-      <filename>laser_sensors/hokuyo/hokuyo.xml</filename>
+      <filename>laser_sensors/hokuyo/hokuyo_URG_04LX.xml</filename>
 	  <laser_specifications>
-        <pose>
-          <theta>1.57</theta>
-        </pose>
-      </laser_specifications>
-    </laser>
-    <laser>
-      <filename>laser_sensors/hokuyo/hokuyo.xml</filename>
-	  <laser_specifications>
-        <pose>
-          <theta>-1.57</theta>
-        </pose>
 		<max_range>2</max_range>
         <num_rays>90</num_rays>
       </laser_specifications>
