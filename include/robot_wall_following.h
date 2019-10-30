@@ -33,8 +33,8 @@ class RobotWallFollowing {
 
         RobotWallFollowing(int argc,char **argv);
         ~RobotWallFollowing();
-        update(const sensor_msgs::LaserScan& msg);
+        void update(const sensor_msgs::LaserScan& msg);
 
-}
+};
 
 #endif

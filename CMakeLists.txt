@@ -10,9 +10,46 @@ project(reactive)
 ## find_package(catkin REQUIRED)
 
 ## System dependencies are found with CMake's conventions
-find_package(catkin REQUIRED COMPONENTS roscpp)
+find_package(catkin REQUIRED COMPONENTS 
+    roscpp
+    tf
+    stdr_msgs
+    geometry_msgs
+    sensor_msgs
+    nav_msgs)
 
 catkin_package()
+
+
+
+
+
+
+
+catkin_package(
+  INCLUDE_DIRS
+    include
+  LIBRARIES
+  CATKIN_DEPENDS
+    roscpp
+    tf
+    stdr_msgs
+    geometry_msgs
+    sensor_msgs
+    nav_msgs
+)
+
+include_directories(
+  include
+  ${catkin_INCLUDE_DIRS}
+)
+
+
+
+
+
+
+
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -116,10 +153,16 @@ catkin_package()
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(hello src/hello.cpp)
+add_executable(robot
+  src/main.cpp
+  src/robot_wall_following.cpp)
+
+add_dependencies(robot stdt_msgs_gencpp)
+
 target_link_libraries(hello ${catkin_LIBRARIES})
+
 
 
 ## Declare a C++ library
@@ -206,3 +249,8 @@ target_link_libraries(hello ${catkin_LIBRARIES})
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+
+install(TARGETS robot
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
