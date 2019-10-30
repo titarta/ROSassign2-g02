@@ -12,6 +12,9 @@ RobotWallFollowing::RobotWallFollowing(int argc,char **argv) {
 	cmd_vel_pub_ = n_.advertise<geometry_msgs::Twist>(speeds_topic_.c_str(), 1);
 }
 
+RobotWallFollowing::~RobotWallFollowing() {
+}
+
 void writeToFile(char* filename, char* str)
 {
 	FILE *f = fopen(filename, "a");
