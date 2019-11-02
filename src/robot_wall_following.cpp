@@ -86,8 +86,8 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 
 
-	const float GOAL_DISTANCE = 0.3;
-	const float K = 10;
+	const float GOAL_DISTANCE = 0.2;
+	const float K = 5;
 
 	// values for angular speed
 	float alpha = PI/2 - abs(realAng);
