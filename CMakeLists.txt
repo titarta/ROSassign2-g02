@@ -30,6 +30,7 @@ catkin_package(
     nav_msgs
 )
 
+add_executable(hello src/hello.cpp)
 add_executable(robot
   src/main.cpp
   src/robot_wall_following.cpp)
