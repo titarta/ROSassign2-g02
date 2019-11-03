@@ -33,18 +33,23 @@ void writeToFile(char* filename, char* str)
 }
 
 void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
-	float intendedDistance = 0.2;
+	const float GOAL_DISTANCE = 0.2; //distancia linha a parede
+	const float K = 10; //valor para dar tune a velocidade angular
+	const float F = 0.5; //valor para dar tune a correcao da velocidade angular usando o laser da frente
+	const float frontAngle = msg.angle_increment/2 + 0.01; //angulos para saber quais os lasers da frente
+	const float velocity = 0.5; //velocidade do robo
+	const float maxAngVelocity = 2.5; //velocidade angular maxima
 
 
-
-    scan_ = msg;
+    scan_ = msg;//msg tens a informacao dos lasers, ver sensor_msgs:LaserScan api para mais informacao
 	geometry_msgs::Twist cmd;
 	char filename[] = "logs.txt";
 
-	float minDistance = 100.0;
+	float minDistance = 100.0; //distancias que depois vao ter o minimo
 	float secondMinDistance = 100.0;
+	float frontDistance = 100.0;
 
-	float angleMin = 0.0;
+	float angleMin = 0.0;//angulos das distancias minimas
 	float angleSecondMin = 0.0;
 
 
@@ -52,6 +57,12 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 		float laserDistance = scan_.ranges[i];
 		float laserAngle = scan_.angle_min + scan_.angle_increment * i;
+
+		if(laserAngle <= frontAngle && laserAngle >= -frontAngle) {
+			if (laserDistance <= frontDistance) {
+				frontDistance = laserDistance;
+			}
+		}
 
 		if (laserDistance < secondMinDistance) {
 			if (laserDistance < minDistance) {
@@ -67,9 +78,15 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 	}
 
+	float frontDeviation = 0.0; //valor que vai ser adicionado a formula para as curvas apertadas serem mais smooth
 
-	float realMinDistance = 100.0;
-	float realAng = 0.0;
+	if (frontDistance < 2*GOAL_DISTANCE) {
+		frontDeviation = (PI*GOAL_DISTANCE)/(2*frontDistance);
+	}
+
+
+	float realMinDistance = 100.0; //distancia robo a parede
+	float realAng = 0.0; //angulo da reta perpendicular a parede
 	float angAux = 0.0;
 
 	if(angleMin > angleSecondMin) {
@@ -86,14 +103,10 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 	//cases where only one laser hits the wall
 	if(minDistance*2 < secondMinDistance) {
-		realAng = angleMin;
-		realMinDistance = minDistance;
+		realAng = angleMin; 
+		realMinDistance = minDistance; 
 	}
 
-
-
-	const float GOAL_DISTANCE = 0.4;
-	const float K = 15;
 
 	// values for angular speed
 	float alpha = PI/2 - abs(realAng);
@@ -104,19 +117,25 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 		cout << "DISTANCE TO WALL: " << minDistance << endl;
 		cout << "ALPHA: " << alpha << endl;
 
-		cmd.linear.x = 0.5;
+		cmd.linear.x = velocity;
 
 		//https://www.seas.upenn.edu/sunfest/docs/papers/12-bayer.pdf
-		cmd.angular.z = (-K * (sin(alpha) - (realMinDistance - GOAL_DISTANCE))) * cmd.linear.x;
+		//big formula that does all the work
+		cmd.angular.z = (-K * (sin(alpha) - (realMinDistance - GOAL_DISTANCE) + F*frontDeviation)) * cmd.linear.x;
+
+		if (cmd.angular.z > maxAngVelocity) { //limitar a velocidade angular
+			cmd.angular.z = maxAngVelocity;
+		}
 	}
 	else
 	{
-		cmd.linear.x = 0.5;
-		cmd.angular.z = 0.0;
+		cmd.linear.x = velocity;
+		cmd.angular.z = velocity*velocity/2; //robo anda a roda 
 	}
 
 	cmd_vel_pub_.publish(cmd);
 
+	//prints
 	char minDistanceStr[20];
 	snprintf(minDistanceStr, 20, "%f", minDistance);
 	char alphaStr[20];
@@ -125,6 +144,8 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 	snprintf(linearStr, 20, "%f", cmd.linear.x);
 	char angularStr[20];
 	snprintf(angularStr, 20, "%f", cmd.angular.z);
+	char frontDistanceStr[20];
+	snprintf(frontDistanceStr, 20, "%f", frontDeviation);
 
 	char log[400];
 	strcpy(log, "=================\nwallDistance = ");
@@ -135,6 +156,8 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 	strcat(log, linearStr);
 	strcat(log, "\n    angular = ");
 	strcat(log, angularStr);
+	strcat(log, "\n    frontDeviation = ");
+	strcat(log, frontDistanceStr);
 	strcat(log, "\n\n");
 	writeToFile(filename, log);
 	cout << log;
