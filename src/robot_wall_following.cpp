@@ -84,10 +84,16 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 		realMinDistance = minDistance * cos(angAux);
 	}
 
+	//cases where only one laser hits the wall
+	if(minDistance*2 < secondMinDistance) {
+		realAng = angleMin;
+		realMinDistance = minDistance;
+	}
 
 
-	const float GOAL_DISTANCE = 0.2;
-	const float K = 5;
+
+	const float GOAL_DISTANCE = 0.4;
+	const float K = 15;
 
 	// values for angular speed
 	float alpha = PI/2 - abs(realAng);
