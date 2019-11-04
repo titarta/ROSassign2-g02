@@ -5,7 +5,9 @@
  * Install STDR
 
  Compilation / Installation:
- * Execute 'catkin_make' in the root directory
+ * Execute 'catkin_make' in ROS workspace
+ 
+ * Source devel/setup.bash everytime you open a new terminal
 
 To initialize the STDR GUI + Map + Robot execute one of the following commands:
    
