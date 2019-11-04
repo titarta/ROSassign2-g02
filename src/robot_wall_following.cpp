@@ -113,10 +113,6 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 	if (realMinDistance <= scan_.range_max)
 	{
-		cout << "******** WALKING *********" << endl;
-		cout << "DISTANCE TO WALL: " << minDistance << endl;
-		cout << "ALPHA: " << alpha << endl;
-
 		cmd.linear.x = velocity;
 
 		//https://www.seas.upenn.edu/sunfest/docs/papers/12-bayer.pdf
@@ -137,7 +133,7 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 
 	//prints
 	char minDistanceStr[20];
-	snprintf(minDistanceStr, 20, "%f", minDistance);
+	snprintf(minDistanceStr, 20, "%f", realMinDistance);
 	char alphaStr[20];
 	snprintf(alphaStr, 20, "%f", alpha);
 	char linearStr[20];
@@ -152,12 +148,12 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 	strcat(log, minDistanceStr);
 	strcat(log, "\nalpha = ");
 	strcat(log, alphaStr);
+	strcat(log, "\nfrontDeviation = ");
+	strcat(log, frontDistanceStr);
 	strcat(log, "\nSpeed:\n    linear = ");
 	strcat(log, linearStr);
 	strcat(log, "\n    angular = ");
 	strcat(log, angularStr);
-	strcat(log, "\n    frontDeviation = ");
-	strcat(log, frontDistanceStr);
 	strcat(log, "\n\n");
 	writeToFile(filename, log);
 	cout << log;
