@@ -17,21 +17,6 @@ RobotWallFollowing::RobotWallFollowing(int argc,char **argv) {
 RobotWallFollowing::~RobotWallFollowing() {
 }
 
-void writeToFile(char* filename, char* str)
-{
-	FILE *f = fopen(filename, "a");
-	if (f == NULL)
-	{
-		printf("Error opening file!\n");
-		exit(1);
-	}
-
-	/* print some text */
-	fprintf(f, "%s", str);
-
-	fclose(f);
-}
-
 void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 	const float GOAL_DISTANCE = 0.2; //distancia linha a parede
 	const float K = 10; //valor para dar tune a velocidade angular
@@ -155,9 +140,5 @@ void RobotWallFollowing::update(const sensor_msgs::LaserScan &msg) {
 	strcat(log, "\n    angular = ");
 	strcat(log, angularStr);
 	strcat(log, "\n\n");
-	writeToFile(filename, log);
 	cout << log;
-
-
-	
 }
